@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "日淘比价助手 · 商品页查价",
+  "version": "1.0",
+  "description": "在日淘市集网页版商品详情页注入查价格按钮，一键比闲鱼 / 煤炉 / 雅虎日拍 / 骏河屋 / 乐天 / 日亚。",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "http://127.0.0.1:8787/*",
+    "http://localhost:8787/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.ritao.hk/*",
+        "*://*.ritao.cn/*",
+        "*://*.52ritao.cn/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": { "default_title": "日淘比价助手（需先运行本地服务）" }
+}

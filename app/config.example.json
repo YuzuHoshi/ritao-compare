@@ -1,0 +1,26 @@
+{
+  "jpy_cny": 0.048,
+  "ritao_price_jpy": null,
+  "proxy": "",
+  "rakuten_app_id": "",
+  "rakuten_access_key": "",
+  "rakuten_affiliate_id": "",
+  "enable_browser": false,
+  "browser_headless": false,
+  "browser_min_interval": 5,
+  "browser_max_per_hour": 20,
+  "browser_platforms": ["mercari"],
+  "use_llm": false,
+  "llm_base_url": "",
+  "llm_api_key": "",
+  "llm_model": "gpt-4o-mini",
+  "llm_vision_model": "",
+  "theme": "light",
+  "enabled_platforms": [
+    "xianyu", "mercari", "mercari_sold", "surugaya", "yahoo_auction",
+    "yahoo_closed", "aucfan", "rakuten", "amazon_jp", "mandarake",
+    "bookoff", "taobao", "kakaku", "ritao"
+  ],
+  "host": "0.0.0.0",
+  "port": 8787
+}

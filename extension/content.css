@@ -1,0 +1,37 @@
+#rt-price-btn {
+  position: fixed !important;
+  right: 18px !important;
+  bottom: 72px !important;
+  z-index: 2147483647 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 10px 15px !important;
+  border: 1px solid #f0b657 !important;
+  border-radius: 999px !important;
+  background: #e9a23b !important;
+  color: #1a1206 !important;
+  font: 600 13px/1.2 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  letter-spacing: .3px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .35) !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+#rt-price-btn:hover { background: #f5b552 !important; }
+#rt-price-btn.rt-off { background: #2b313b !important; color: #d5dbe4 !important; border-color: #4a5462 !important; }
+#rt-price-hint {
+  position: fixed !important;
+  right: 18px !important;
+  bottom: 118px !important;
+  z-index: 2147483647 !important;
+  max-width: 260px !important;
+  padding: 7px 10px !important;
+  border-radius: 8px !important;
+  background: rgba(20, 24, 31, .94) !important;
+  color: #d5dbe4 !important;
+  font: 11px/1.5 -apple-system, "PingFang SC", sans-serif !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  transition: opacity .2s !important;
+}
+#rt-price-btn:hover + #rt-price-hint { opacity: 1 !important; }

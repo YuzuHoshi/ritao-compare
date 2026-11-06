@@ -1,0 +1,91 @@
+# Optional CI recipe - NOT active by default.
+# To enable automatic rebuilds, copy this file to
+# .github/workflows/release.yml and push with a token that has
+# the `workflow` scope (classic PAT) or Workflows: read+write
+# (fine-grained PAT). Release assets in this repo are built and
+# uploaded by the maintainer, so you do not need CI to use it.
+name: Build Release Assets
+
+# Keeps the repository text-only: the portable zip is archived straight from
+# the tracked sources and the APK is compiled here, so no binary ever needs to
+# be committed and no upload token ever leaves GitHub Actions.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release.yml'
+      - 'app/**'
+      - 'web/**'
+      - 'android/**'
+      - 'extension/**'
+      - 'README.md'
+      - 'README.en.md'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-assets
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      TAG: v1.2.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build portable zip
+        run: |
+          set -euo pipefail
+          mkdir -p dist stage/RitaoCompare-portable/docs/screenshots
+          git archive --format=zip \
+            --prefix=RitaoCompare-portable/ \
+            -o "dist/RitaoCompare-portable-${TAG}.zip" HEAD \
+            README.md README.en.md start.bat start.sh .gitignore \
+            app web extension android docs
+          # Screenshots are stored as pure-text SVG wrappers in git. Unwrap the
+          # embedded JPEGs here so the portable zip also has offline originals.
+          python3 - <<'PY'
+          import base64, re, pathlib
+          src = pathlib.Path("docs/screenshots")
+          dst = pathlib.Path("stage/RitaoCompare-portable/docs/screenshots")
+          for s in src.glob("*.svg"):
+              m = re.search(r"data:image/jpeg;base64,([A-Za-z0-9+/=]+)", s.read_text())
+              if m:
+                  (dst / (s.stem + ".jpg")).write_bytes(base64.b64decode(m.group(1)))
+          PY
+          (cd stage && zip -qr "../dist/RitaoCompare-portable-${TAG}.zip" RitaoCompare-portable)
+          ls -lh dist
+
+      - name: Build Android APK
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          echo "ANDROID_HOME=${ANDROID_HOME:-unset}"
+          bash android/build-linux.sh "dist/RitaoCompare-${TAG}.apk"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          assets=()
+          for f in "dist/RitaoCompare-portable-${TAG}.zip" "dist/RitaoCompare-${TAG}.apk"; do
+            if [ -s "$f" ]; then assets+=("$f"); else echo "skip (missing): $f"; fi
+          done
+          [ "${#assets[@]}" -gt 0 ] || { echo "no assets produced"; exit 1; }
+          ls -lh "${assets[@]}"
+          notes="Green package: unzip and run start.bat (Windows) or bash start.sh. Android overlay APK is optional. No credentials or personal data are bundled. See README.md / README.en.md for the 3-step quick start."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            gh release create "$TAG" "${assets[@]}" \
+              --title "Ritao Compare ${TAG}" \
+              --notes "$notes"
+          fi

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">日淘比价助手</string>
+    <string name="accessibility_desc">只读取日淘市集商品页上的商品名称，用于在本机一键比价。不上传、不收集任何数据。</string>
+</resources>

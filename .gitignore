@@ -1,0 +1,43 @@
+# ─────────────────────────────────────────────────────────────
+# Privacy first: local credentials, history and login state must
+# NEVER be committed. The real files have never been published.
+# ─────────────────────────────────────────────────────────────
+app/config.json
+app/data/
+*.db
+*.db-wal
+*.db-shm
+*.keystore
+*.jks
+*.idsig
+.browser-profile/
+.ritao-compare/
+
+# WorkBuddy session notes and local scratch / SDK toolchain
+.workbuddy/
+.tmp/
+.tools/
+.build/
+__pycache__/
+*.pyc
+*.log
+
+# Local screenshots, exports and cached images (may contain real listings)
+.ui-*.png
+.preview*.png
+示例_*.csv
+*.csv
+
+# Binaries and third-party packages: distributed via Releases, not git
+*.apk
+*.apk.1
+*.zip
+*.jar
+
+# The portable bundle and APK are build artifacts, never source
+RitaoCompare-*.apk
+RitaoCompare-portable-*.zip
+
+# OS noise
+Thumbs.db
+.DS_Store

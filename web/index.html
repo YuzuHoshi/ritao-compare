@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3EEE4">
+<title>日淘比价 · Price Desk</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="rail">
+    <div class="brand">
+      <span class="seal">比</span>
+      <div class="brand-txt"><strong>日淘比价</strong><small>PRICE DESK</small></div>
+    </div>
+
+    <nav class="nav" id="navMain">
+      <div class="nav-label">检索</div>
+      <button class="nav-item active" data-view="price" type="button">
+        <svg viewBox="0 0 20 20"><path d="M3 16.5V9M8 16.5V4M13 16.5v-5M18 16.5V7"/></svg><span>比价工作台</span>
+      </button>
+      <button class="nav-item" data-view="souba" type="button">
+        <svg viewBox="0 0 20 20"><path d="M2.5 16.5h15"/><path d="M4 13l3.6-4 2.8 2.4L15 5.5l2 3"/><circle cx="15" cy="5.5" r="1.4"/></svg><span>落札相場</span><em id="navCountSouba"></em>
+      </button>
+      <button class="nav-item" data-view="compare" type="button">
+        <svg viewBox="0 0 20 20"><path d="M10 3v14"/><path d="M4 6.5L1.8 11h4.4zM16 6.5L13.8 11h4.4z"/><path d="M1.8 11c0 1.3 1 2.2 2.2 2.2s2.2-.9 2.2-2.2M13.8 11c0 1.3 1 2.2 2.2 2.2s2.2-.9 2.2-2.2"/></svg><span>中日比价</span>
+      </button>
+      <button class="nav-item" data-view="sites" type="button">
+        <svg viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="12" rx="2"/><path d="M2.5 8h15M7.5 8v8"/></svg><span>站点直达</span>
+      </button>
+
+      <div class="nav-label">商品情报</div>
+      <button class="nav-item" data-view="figures" type="button">
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="5.8" r="2.8"/><path d="M4.8 17.2c0-3.1 2.3-5.4 5.2-5.4s5.2 2.3 5.2 5.4"/></svg><span>手办资料</span>
+      </button>
+      <button class="nav-item" data-view="videos" type="button">
+        <svg viewBox="0 0 20 20"><rect x="2.5" y="5" width="15" height="10" rx="2"/><path d="M8.4 7.9l4.2 2.1-4.2 2.1z"/></svg><span>开箱视频</span><em id="navCountVideo"></em>
+      </button>
+      <button class="nav-item" data-view="media" type="button">
+        <svg viewBox="0 0 20 20"><path d="M4 3.5h9.5A2.5 2.5 0 0116 6v10.5H6.5A2.5 2.5 0 014 14z"/><path d="M7 7h6M7 10h6"/></svg><span>发售资料</span>
+      </button>
+      <button class="nav-item" data-view="vision" type="button">
+        <svg viewBox="0 0 20 20"><rect x="2.5" y="4" width="15" height="12" rx="2"/><circle cx="7.4" cy="8.4" r="1.3"/><path d="M3 14l4-3.4 3 2.4 3.4-3.8 4.6 5"/></svg><span>识图检索</span>
+      </button>
+
+      <div class="nav-label">我的</div>
+      <button class="nav-item" data-view="track" type="button">
+        <svg viewBox="0 0 20 20"><path d="M10 3l2.1 4.4 4.9.7-3.5 3.4.8 4.9L10 14.1 5.7 16.4l.8-4.9L3 8.1l4.9-.7z"/></svg><span>追踪清单</span><em id="navCountWatch"></em>
+      </button>
+    </nav>
+
+    <div class="rail-foot">
+      <button id="btnSettings" class="rail-link" type="button">
+        <svg viewBox="0 0 20 20"><path d="M3 6.5h7M14.5 6.5H17M3 13.5h3M10.5 13.5H17"/><circle cx="12" cy="6.5" r="2"/><circle cx="8" cy="13.5" r="2"/></svg>
+        <span>设置与凭证</span>
+      </button>
+      <div class="status">
+        <i id="statusDot"></i>
+        <div><b id="statusText">连接中</b><small id="railNote">本机运行 · 仅个人使用</small></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-row">
+      <form class="console" id="searchForm" autocomplete="off">
+        <div class="cf cf-main">
+          <label for="keyword">商品名</label>
+          <input id="keyword" type="text" placeholder="粘贴中文商品名，例如 迷宫旅人2 梅芙梅拉 手办">
+        </div>
+        <div class="cf cf-jp">
+          <label for="jpKeyword">日文关键词 <i>可选</i></label>
+          <input id="jpKeyword" type="text" placeholder="留空则自动改写">
+        </div>
+        <div class="console-tools">
+          <button id="btnPaste" class="tool" type="button" title="从剪贴板粘贴">
+            <svg viewBox="0 0 20 20"><rect x="6.5" y="3.5" width="9" height="12.5" rx="1.6"/><path d="M4.5 6.5h-.6A1.4 1.4 0 002.5 8v8.6A1.4 1.4 0 003.9 18h7.6a1.4 1.4 0 001.4-1.4v-.6"/></svg>
+          </button>
+          <button id="btnTranslate" class="tool" type="button" title="中文 → 日文改写">译</button>
+        </div>
+        <button id="btnSearch" class="go" type="submit">
+          <span>查价格</span>
+          <svg viewBox="0 0 20 20"><path d="M4 10h11M11 6l4 4-4 4"/></svg>
+        </button>
+      </form>
+      <div class="top-actions">
+        <button id="btnTheme" class="tool" type="button" title="切换深色 / 浅色">
+          <svg viewBox="0 0 20 20"><path d="M16 12.4A6.7 6.7 0 017.6 4 6.9 6.9 0 1016 12.4z"/></svg>
+        </button>
+        <button id="btnSettingsTop" class="tool" type="button" title="设置">
+          <svg viewBox="0 0 20 20"><path d="M3 6.5h7M14.5 6.5H17M3 13.5h3M10.5 13.5H17"/><circle cx="12" cy="6.5" r="2"/><circle cx="8" cy="13.5" r="2"/></svg>
+        </button>
+      </div>
+      </div>
+      <div class="tok-strip" id="tokStrip" hidden>
+        <span class="tok-label">分词</span>
+        <div class="tok-list" id="tokStripList"></div>
+        <button id="btnPlan" class="tok-plan" type="button">检索方案</button>
+      </div>
+    </header>
+
+    <main class="stage">
+
+      <!-- ============================ 比价 ============================ -->
+      <section class="view active" data-view="price">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>01</b> 比价工作台</div>
+            <h1>这件东西，值不值得买？</h1>
+            <p id="pageSub">同款在售、近 120 天落札成交、国内参考价，一次看清。</p>
+          </div>
+          <div class="page-actions">
+            <button id="btnCopy" class="btn btn-quiet" type="button">复制摘要</button>
+            <button id="btnFav" class="btn btn-quiet" type="button">加入追踪</button>
+            <button id="btnExport" class="btn btn-quiet" type="button">导出 CSV</button>
+          </div>
+        </div>
+
+        <div id="emptyHero" class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><b>开始</b> 零配置也能用</div>
+            <h2>三步，把这件商品的价格摸清楚</h2>
+            <ol class="steps">
+              <li><span>01</span><div><b>复制商品名</b><p>在日淘市集、闲鱼或煤炉商品页复制标题。</p></div></li>
+              <li><span>02</span><div><b>粘贴到上方搜索栏</b><p>快捷键 <kbd>/</kbd> 聚焦，<kbd>Enter</kbd> 检索；也可点「贴」直接读剪贴板。</p></div></li>
+              <li><span>03</span><div><b>看中位价与落札成交</b><p>右侧给出跨平台价格对比与购买结论，点卡片直达原站。</p></div></li>
+            </ol>
+          </div>
+          <div class="hero-side">
+            <div class="hero-block">
+              <div class="hero-label">试试这些</div>
+              <div class="examples">
+                <button type="button" data-example="初音未来 黏土人 手办">初音未来 黏土人</button>
+                <button type="button" data-example="迷宫旅人2 梅芙梅拉 手办 ALTER">梅芙梅拉 手办</button>
+                <button type="button" data-example="戴森 V11 吸尘器">戴森 V11</button>
+              </div>
+            </div>
+            <div class="hero-block">
+              <div class="hero-label">数据源</div>
+              <ul class="src-list">
+                <li><i class="dot jp"></i>楽天市場 官方 API<span>在售新品</span></li>
+                <li><i class="dot jp"></i>煤炉 / 雅虎日拍<span>中古与落札</span></li>
+                <li><i class="dot cn"></i>闲鱼 / 国内平台<span>参考价</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-grid" id="kpiRow"></div>
+
+        <div class="work" id="workGrid">
+          <div class="work-main">
+            <div class="toolbar" id="resultsToolbar">
+              <div class="tb-left">
+                <b id="resultCount">—</b>
+                <span id="resultMeta">尚未检索</span>
+              </div>
+              <div class="tb-right">
+                <div class="seg" id="layoutSeg" role="group" aria-label="视图">
+                  <button class="on" data-layout="grid" type="button">大图</button>
+                  <button data-layout="list" type="button">列表</button>
+                </div>
+                <div class="seg" id="sortSeg" role="group" aria-label="排序">
+                  <button class="on" data-sort="match" type="button">匹配度</button>
+                  <button data-sort="price_asc" type="button">价格 ↑</button>
+                  <button data-sort="price_desc" type="button">价格 ↓</button>
+                </div>
+                <label class="switch" title="隐藏匹配度低于 42 的商品"><input id="onlyRelevant" type="checkbox" checked><span>只看相关</span></label>
+                <label class="switch" title="隐藏国产/仿品与只卖配件、脸片、底座的闲鱼商品"><input id="onlyGenuine" type="checkbox" checked><span>只看正版</span></label>
+                <label class="switch" title="额外驱动本机浏览器抓取煤炉（仅在点击检索时生效）"><input id="deepToggle" type="checkbox"><span>深度比价</span></label>
+              </div>
+            </div>
+            <div id="resultNote" class="notice" hidden></div>
+            <div id="platformFilter" class="filter-chips"></div>
+            <p class="source-hint">价格抓取：乐天 · 骏河屋 · 雅虎落札 · 煤炉 · 闲鱼　|　Amazon / Mandarake / BOOKOFF / 淘宝 仅一键直达（站点反爬或需登录）</p>
+            <div id="resultsList" class="results">
+              <div class="blank">
+                <div class="blank-mark">
+                  <svg viewBox="0 0 48 48"><circle cx="21" cy="21" r="12"/><path d="M30 30l9 9"/></svg>
+                </div>
+                <h3>还没有检索结果</h3>
+                <p>输入商品名后点「查价格」。系统会生成 2–4 个中日候选词，分别检索后合并去重。</p>
+              </div>
+            </div>
+          </div>
+
+          <aside class="work-side" id="workSide">
+            <div class="card side-card" id="compareCard">
+              <div class="card-head"><h3>价格对比</h3><span class="hint">折合人民币</span></div>
+              <div class="compare-empty">填入日淘标价并检索后，这里会给出结论。</div>
+            </div>
+            <div class="card side-card" id="soubaMini">
+              <div class="card-head"><h3>落札相場</h3><span class="hint">近 120 天</span></div>
+              <div class="compare-empty">检索后显示雅虎官方成交统计。</div>
+            </div>
+            <div class="card side-card" id="queryCard">
+              <div class="card-head"><h3>本次检索</h3><span class="hint">候选词</span></div>
+              <div class="compare-empty">这里会展示清洗后的候选词与识别出的品牌、型号。</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ============================ 落札 ============================ -->
+      <section class="view" data-view="souba">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>02</b> 落札相場</div>
+            <h1>别人多少钱买到的</h1>
+            <p>雅虎日拍官方公开页，免登录 · 默认近 120 天 · 可按分类剔除跨品类商品。</p>
+          </div>
+          <div class="page-actions">
+            <a id="soubaLink" class="btn btn-quiet" href="#" target="_blank" rel="noopener">打开原页 ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="souba-bar">
+            <div class="souba-bar-left">
+              <label class="mini-field"><span>分类</span><select id="soubaCategory" class="mini-select" aria-label="选择商品分类"></select></label>
+              <span id="soubaNote" class="hint"></span>
+            </div>
+            <div class="souba-bar-right">
+              <span class="hint">切换分类只刷新这一块，不会重跑检索</span>
+            </div>
+          </div>
+          <div id="soubaStats" class="stat-grid"></div>
+          <div id="soubaDist" class="dist"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>落札明细</h3><span class="hint">按落札时间从近到远 · 点图直达原页</span></div>
+          <div id="soubaItems" class="sold-grid"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>其他成交价入口</h3><span class="hint">煤炉 SOLD · AucFan 历史落札</span></div>
+          <div id="soldLinks" class="link-grid"></div>
+        </div>
+      </section>
+
+      <!-- ============================ 中日比价 ============================ -->
+      <section class="view" data-view="compare">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>03</b> 中日比价</div>
+            <h1>日本到手价 vs 国内现货</h1>
+            <p>把日本同款加上国际运费、服务费与关税，再和闲鱼价格放在一起看。</p>
+          </div>
+          <div class="page-actions">
+            <a id="cnXianyuLink" class="btn btn-quiet" href="https://www.goofish.com/" target="_blank" rel="noopener">打开闲鱼搜索 ↗</a>
+            <button id="btnFetchCn" class="btn btn-primary" type="button">抓取闲鱼</button>
+          </div>
+        </div>
+
+        <div class="card" id="cnSummaryCard">
+          <div class="compare-empty">先检索一次，这里会显示同款中日价格对比。</div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head"><h3>日本同款</h3><span class="hint">按到手价估算排序</span></div>
+            <div id="jpCompareList" class="compare-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>国内参考</h3><span class="hint">闲鱼 / 手动输入</span></div>
+            <div class="cn-price-row">
+              <label for="cnManualPrice">国内看到的价格</label>
+              <input id="cnManualPrice" type="number" min="0" step="1" placeholder="元">
+              <span>元</span>
+            </div>
+            <div id="cnCompareList" class="compare-list"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>到手价估算</h3><span class="hint">按商品标价计算，实际以转运/代购账单为准</span></div>
+          <div class="landed-fields">
+            <label>国际运费 <input id="cnShip" type="number" min="0" step="100"><span>円</span></label>
+            <label>代购 / 服务费 <input id="cnFee" type="number" min="0" max="50" step="0.5"><span>%</span></label>
+            <label>关税 <input id="cnTariff" type="number" min="0" max="50" step="0.5"><span>%</span></label>
+          </div>
+          <div id="landedTable" class="landed-table"></div>
+        </div>
+      </section>
+
+      <!-- ============================ 站点 ============================ -->
+      <section class="view" data-view="sites">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>04</b> 站点直达</div>
+            <h1>一键打开各平台搜索</h1>
+            <p>只拼接搜索链接，不抓取任何页面 · 零封禁风险，永远可用。</p>
+          </div>
+          <div class="page-actions">
+            <button id="btnToggleAll" class="btn btn-quiet" type="button">全选 / 全不选</button>
+            <button id="btnOpenAll" class="btn btn-primary" type="button">打开选中站点</button>
+          </div>
+        </div>
+        <div class="card">
+          <div id="links" class="link-grid"></div>
+        </div>
+      </section>
+
+      <!-- ============================ 手办 ============================ -->
+      <section class="view" data-view="figures">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>05</b> 手办资料</div>
+            <h1>发售信息与官方页面</h1>
+            <p>发售日、定价、厂商、原型师，以及当年发售的官网入口。</p>
+          </div>
+          <div class="page-actions"><span id="figureHint" class="badge"></span></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Hpoi 手办维基</h3><span class="hint">中文资料库</span></div>
+          <div id="figureItems" class="figure-grid"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>资料库与厂商官网</h3><span class="hint">站内搜索 + 精准找（已带关键词）</span></div>
+          <div id="figureLinks" class="link-grid"></div>
+        </div>
+      </section>
+
+      <!-- ============================ 识图 ============================ -->
+      <section class="view" data-view="vision">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>08</b> 识图检索</div>
+            <h1>只有一张图，也能查</h1>
+            <p>图片 → 结构化关键词 → 复用文字检索链路。图片默认只存本机。</p>
+          </div>
+        </div>
+        <div class="two-col vision-layout">
+          <div class="card">
+            <div class="card-head"><h3>上传图片</h3><span class="hint">jpg · png · webp &lt; 6 MB</span></div>
+            <div id="dropZone" class="drop-zone">
+              <svg viewBox="0 0 28 28"><rect x="3" y="5" width="22" height="18" rx="2.4"/><circle cx="9.6" cy="11" r="1.7"/><path d="M4 20l5.6-4.8 3.8 3.2 3.8-4.2 5.8 6"/></svg>
+              <strong>拖入图片 · 点击选择 · Ctrl+V 粘贴</strong>
+              <span>官图、实物图、截图都可以</span>
+              <input id="fileInput" type="file" accept="image/*" hidden>
+            </div>
+            <div id="visionPreview" class="vision-preview" hidden></div>
+            <div class="vision-actions">
+              <button id="btnAnalyze" class="btn btn-primary" type="button">识别并生成关键词</button>
+              <label class="switch"><input id="useModel" type="checkbox" checked><span>调用已配置模型</span></label>
+            </div>
+            <p id="visionStatus" class="hint"></p>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>识别结果</h3><span class="hint">可直接送入检索</span></div>
+            <div id="visionResult" class="vision-result"></div>
+            <div class="card-head sub"><h3>平台原生以图搜图</h3><span class="hint">打开后手动选图</span></div>
+            <div id="visualSites" class="link-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ 追踪 ============================ -->
+      <!-- ============================ 发售资料 ============================ -->
+      <section class="view" data-view="media">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>06</b> 发售资料</div>
+            <h1>游戏 / CD / 动画 BD / 轻小说</h1>
+            <p>发售日、厂商、平台与卷数；数据来自 VNDB、MusicBrainz、AniList、日文维基。</p>
+          </div>
+          <div class="page-actions">
+            <span id="mediaType" class="media-type"></span>
+            <button id="btnMediaSearch" class="btn btn-primary" type="button">查发售资料</button>
+          </div>
+        </div>
+        <div class="card">
+          <p id="mediaQuery" class="muted small"></p>
+          <div id="mediaItems" class="media-grid"></div>
+          <div id="mediaNote" class="notice" hidden></div>
+          <div id="mediaLinks" class="video-links"></div>
+        </div>
+      </section>
+
+      <!-- ============================ 开箱视频 ============================ -->
+      <section class="view" data-view="videos">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>07</b> 开箱 / 评测</div>
+            <h1>先看视频，再决定买不买</h1>
+            <p>用当前查价的关键词，在 B 站、niconico、YouTube 找开箱与实物评测。</p>
+          </div>
+          <div class="page-actions">
+            <button id="btnVideoSearch" class="btn btn-primary" type="button">搜索视频</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="video-queries" id="videoQueries"></div>
+          <div id="videoNote" class="notice" hidden></div>
+          <div id="videoList" class="video-grid"></div>
+          <div id="videoLinks" class="video-links"></div>
+        </div>
+      </section>
+
+      <!-- ============================ 追踪 ============================ -->
+      <section class="view" data-view="track">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow"><b>09</b> 追踪清单</div>
+            <h1>关注的东西，价格会自己留下痕迹</h1>
+            <p>每次检索自动沉淀到本机 SQLite，越用越有自己的价格曲线。</p>
+          </div>
+          <div class="page-actions"><span id="historyMeta" class="badge"></span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>收藏与目标价</h3><span class="hint">点「重查」回到检索</span></div>
+          <div id="watchItems" class="watch-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>价格走势</h3><span class="hint">按天取中位价</span></div>
+          <div id="chart" class="chart"></div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head"><h3>分平台统计</h3><span class="hint">本地快照</span></div>
+            <div id="historySummary" class="stat-grid"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>最近检索</h3><span class="hint">点一下重新查</span></div>
+            <div id="recent" class="chips"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<nav class="mobile-tabs" id="mobileTabs"></nav>
+
+<div class="modal-backdrop" id="planBackdrop" hidden></div>
+<section class="plan-modal" id="planModal" hidden>
+  <header class="plan-head">
+    <div>
+      <div class="eyebrow"><b>PLAN</b> 检索方案</div>
+      <h2>先确认要查什么</h2>
+      <p>去掉无关分词、勾选要执行的查询，再开始检索。</p>
+    </div>
+    <button id="btnClosePlan" class="tool" type="button" aria-label="关闭">✕</button>
+  </header>
+  <div class="plan-body">
+    <section class="plan-section">
+      <div class="plan-label">分词 · 点一下可排除</div>
+      <div class="tok-group"><span class="tok-lang">中</span><div id="planTokCn" class="tok-list"></div></div>
+      <div class="tok-group"><span class="tok-lang">日</span><div id="planTokJp" class="tok-list"></div></div>
+      <p class="hint">灰掉的是系统自动忽略的噪声词（成色、规格、店铺码）。</p>
+    </section>
+    <section class="plan-section">
+      <div class="plan-label">识别结果</div>
+      <div id="planAttrs" class="attrs"></div>
+    </section>
+    <section class="plan-section">
+      <div class="plan-label">中文检索词 · 闲鱼 / 淘宝 / 开箱视频</div>
+      <div class="plan-cn">
+        <span class="pc-tag">中</span>
+        <input id="planCnQuery" type="text" placeholder="例：我的青春恋爱物语果然有问题">
+      </div>
+      <p class="hint">系统按作品 / 角色自动生成，可以手动改。改完后闲鱼、淘宝、开箱视频、手办站、发售资料、站点深链都用这个词；日文检索词在下面单独编辑。</p>
+    </section>
+    <section class="plan-section">
+      <div class="plan-label">候选查询 · 勾选后执行（可编辑）</div>
+      <div id="planQueries" class="plan-queries"></div>
+      <button id="btnAddQuery" class="btn btn-quiet" type="button">+ 添加自定义查询</button>
+    </section>
+  </div>
+  <footer class="plan-foot">
+    <div class="plan-foot-opts">
+      <label class="switch"><input id="planDeep" type="checkbox"><span>抓取闲鱼 / 煤炉</span></label>
+      <label class="switch"><input id="planVideo" type="checkbox"><span>同时找开箱视频</span></label>
+      <label class="switch"><input id="planSkip" type="checkbox"><span>以后不再确认</span></label>
+    </div>
+    <button id="btnRunPlan" class="btn btn-primary" type="button">按此方案检索</button>
+  </footer>
+</section>
+
+<div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+<aside class="drawer" id="settingsDrawer" hidden>
+  <div class="drawer-head">
+    <div><div class="eyebrow"><b>SET</b> 本机配置</div><h2>设置与凭证</h2><p>所有凭证只写入本机 config.json，不上传、不回传。</p></div>
+    <button id="btnCloseSettings" class="tool" type="button" aria-label="关闭">✕</button>
+  </div>
+  <div class="drawer-body">
+    <h3>换算与显示</h3>
+    <div class="field-row">
+      <label class="field"><span>100 日元 = ? 人民币</span><input id="cfgRate" type="number" step="0.001" min="0"></label>
+      <label class="field"><span>日淘市集标价（JPY）</span><input id="ritaoPrice" type="number" min="0" step="1" placeholder="3800"></label>
+    </div>
+    <label class="field"><span>主题</span><select id="cfgTheme"><option value="light">和纸（浅色）</option><option value="dark">墨色（深色）</option></select></label>
+    <label class="switch"><input id="cfgPlanConfirm" type="checkbox" checked><span>检索前确认方案（分词 / 候选词）</span></label>
+
+    <h3>网络代理</h3>
+    <label class="field"><span>Clash / HTTP 代理</span><input id="cfgProxy" type="text" placeholder="http://127.0.0.1:7897"></label>
+    <p class="hint">用于本机调用楽天 API、雅虎落札相場与登录浏览器。浏览器里点开的搜索链接走你自己的网络。</p>
+
+    <h3>楽天官方凭证 <span class="tag">仅本机</span></h3>
+    <label class="field"><span>Application ID</span><input id="cfgRakuten" type="text" placeholder="留空 = 不修改"></label>
+    <label class="field"><span>Access Key</span><input id="cfgRakutenKey" type="password" placeholder="留空 = 不修改"></label>
+    <p id="keyState" class="hint"></p>
+    <button id="btnClearKeys" class="btn btn-quiet" type="button">清除本机楽天凭证</button>
+
+    <h3>AI 改写与识图 <span class="tag">可选</span></h3>
+    <label class="switch switch-main"><input id="cfgUseLlm" type="checkbox" checked><span><b>启用 AI</b>（关闭 = 纯本地规则，零调用、零费用）</span></label>
+    <div class="llm-scope">
+      <div><span>检索词改写</span><b>中文标题 → 日文电商检索词（查价与方案弹窗）</b></div>
+      <div><span>识图</span><b>截图 → 品牌 / 系列 / 角色 / 型号 + 日文词</b></div>
+      <div><span>翻译</span><b>「译」按钮 → 日文商品名</b></div>
+    </div>
+    <p id="llmState" class="hint"></p>
+    <div id="llmFields">
+      <label class="field"><span>Base URL（OpenAI 兼容）</span><input id="cfgLlmBase" type="text" placeholder="https://api.deepseek.com"></label>
+      <label class="field"><span>API Key</span><input id="cfgLlmKey" type="password" placeholder="留空 = 不修改"></label>
+      <div class="field-row">
+        <label class="field"><span>文本模型</span><input id="cfgLlmModel" type="text" placeholder="deepseek-chat"></label>
+        <label class="field"><span>视觉模型</span><input id="cfgVisionModel" type="text" placeholder="gpt-4o / qwen-vl-max"></label>
+      </div>
+      <p class="security-note">不填也能用：标题改写走内置品牌 / 品类词典，识图走各平台原生以图搜图。填入后，图片只会发送给你自己配置的接口。</p>
+    </div>
+    <p id="llmHint" class="hint">关闭后：检索词完全由内置规则生成（100+ 作品 / 角色 / 品牌映射 + 噪声清洗 + 同款判定），检索仍以搜索框内容为准，只是不再请求任何模型；凭据可以留着，不会发出一个请求。</p>
+
+    <h3>自家登录浏览器 <span class="tier-badge">C</span></h3>
+    <label class="switch"><input id="cfgBrowser" type="checkbox"><span>启用 Tier C</span></label>
+    <label class="switch"><input id="cfgHeadless" type="checkbox"><span>静默模式（可见窗口更不易被判自动化）</span></label>
+    <div class="field-row">
+      <label class="field"><span>最小间隔（秒）</span><input id="cfgInterval" type="number" min="3" max="60"></label>
+      <label class="field"><span>每小时上限</span><input id="cfgMaxHour" type="number" min="1" max="100"></label>
+    </div>
+    <div class="field-label">实际驱动的站点</div>
+    <div id="cfgBrowserPlatforms" class="cfg-grid"></div>
+    <div class="login-row">
+      <button class="btn btn-quiet" data-login="xianyu" type="button">登录闲鱼</button>
+      <button class="btn btn-quiet" data-login="mercari" type="button">登录煤炉</button>
+      <button class="btn btn-quiet" data-login="yahoo_closed" type="button">登录雅虎日拍</button>
+    </div>
+    <p id="browserNote" class="hint"></p>
+    <div id="safetyBox" class="safety-box"></div>
+    <p class="warn">单一常驻浏览器会话、只读已渲染文字、无点击 / 无提交 / 无消息、单页无分页、节流 + 抖动、每小时上限、风控词立即停止。<b>平台条款通常禁止自动化，无法承诺绝对零风险</b>。</p>
+
+    <h3>启用的站点</h3>
+    <div id="cfgPlatforms" class="cfg-grid"></div>
+  </div>
+  <div class="drawer-foot"><button id="btnSaveConfig" class="btn btn-primary" type="button">保存设置</button></div>
+</aside>
+
+<div id="toast" class="toast" hidden></div>
+<script src="/app.js"></script>
+</body>
+</html>
